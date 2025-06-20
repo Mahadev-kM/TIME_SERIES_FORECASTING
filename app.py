@@ -19,6 +19,21 @@ else:
     # fallback to default data
     df = pd.read_csv('data/train.csv')
 
+# Check for required columns and provide a sample template if missing
+required_columns = {'Date', 'Store', 'Dept', 'Weekly_Sales'}
+missing = required_columns - set(df.columns)
+if missing:
+    st.error(f"Your file is missing the following required columns: {', '.join(missing)}")
+    st.info("You can download a sample template below, fill it with your data, and upload it again.")
+    sample_df = pd.DataFrame(columns=list(required_columns))
+    st.download_button(
+        label="Download Sample CSV Template",
+        data=sample_df.to_csv(index=False),
+        file_name="sales_template.csv",
+        mime="text/csv"
+    )
+    st.stop()
+
 # Convert Date column
 if 'Date' in df.columns:
     df['Date'] = pd.to_datetime(df['Date'])
@@ -95,4 +110,19 @@ These numbers show how accurate the model's predictions are for the last few wee
 - **RMSE (Root Mean Squared Error):** On average, how much the predictions differ from the actual sales. Lower is better.
 - **MAE (Mean Absolute Error):** The average absolute difference between predicted and actual sales. Lower is better.
 - **MAPE (Mean Absolute Percentage Error):** The average error as a percentage of actual sales. For example, 10% means predictions are off by 10% on average.
-""") 
+""")
+
+required_columns = {'Date', 'Store', 'Dept', 'Weekly_Sales'}
+missing = required_columns - set(df.columns)
+if missing:
+    st.error(f"Your file is missing the following required columns: {', '.join(missing)}")
+    st.info("You can download a sample template below, fill it with your data, and upload it again.")
+    # Provide download button for template (see next step)
+    sample_df = pd.DataFrame(columns=list(required_columns))
+    st.download_button(
+        label="Download Sample CSV Template",
+        data=sample_df.to_csv(index=False),
+        file_name="sales_template.csv",
+        mime="text/csv"
+    )
+    st.stop() 
